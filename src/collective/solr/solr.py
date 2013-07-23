@@ -238,6 +238,12 @@ class SolrConnection:
         del self.xmlbody[:]
 
     def search(self, **params):
+        # XXX: Ugly hack. Needs to be properly fixed!!!
+        if 'rows' not in params or params['rows'] == '':
+            params['rows'] = '1000'
+        if not '\\/Plone' in params['q']:
+            params['q'] = params['q'].replace('/Plone', "\\/Plone")
+        # XXX: Ugly hack. Needs to be properly fixed!!!
         request = urllib.urlencode(params, doseq=True)
         logger.debug('sending request: %s' % request)
         try:
